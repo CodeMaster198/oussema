@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="style.css" rel="stylesheet">
+
+    <title>Calcul de Position</title>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Menu</h2>
+        <a href="./application1.html">Carnet NCR,Carte Visites</a>
+        <a href="./application3.html">Impression Numerique</a>
+        <a href="./application2.html">Impression Chemise</a>
+    </div>
+
+    <div class="content">
+        <h1>Devis Chemises</h1>
+        <br>
+
+        
+    
+        <div class="card">
+           
+<br>
+            <h3>Nombre des couleurs</h3>
+            <div class="checkbox-group1">
+                <label><input type="checkbox" id="optionCouleur1" onclick="selectCouleur(1)"> 1 couleur</label>
+                <label><input type="checkbox" id="optionCouleur2" onclick="selectCouleur(2)"> 2 couleurs</label>
+                <label><input type="checkbox" id="optionCouleur3" onclick="selectCouleur(3)"> 3 couleurs</label>
+                <label><input type="checkbox" id="optionCouleur4" onclick="selectCouleur(4)"> 4 couleurs</label>
+            </div>
+            <br>
+
+            <h3>Grammage Papier</h3>
+
+            <div class="checkbox-group2">
+                <label><input type="checkbox" id="optionGrammage1"  onclick="selectGrammage(1)" > 80GR</label>
+                <label><input type="checkbox" id="optionGrammage2"  onclick="selectGrammage(2)"> 180GR</label>
+                <label><input type="checkbox" id="optionGrammage3"  onclick="selectGrammage(3)"> 250GR</label>
+                <label><input type="checkbox" id="optionGrammage4"  onclick="selectGrammage(4)"> 300GR</label>
+            </div>
+<br>
+            <h3>Autre Options</h3>
+            <div class="checkbox-group3">
+                <label><input type="checkbox" id="optionfilm" onclick="selectfilm()"> Film</label>
+            </div>
+<br>
+            <label for="nombre">Nombre de carnets souhaités</label>
+            <input type="number" id="nombre" placeholder="Tapez le nombre de chemises souhaité" oninput="calculerTotal();">
+        </div>
+
+         
+
+        <div class="card total-section">
+            <h3>Total</h3>
+            <input type="number" id="total" placeholder="Total calculé" readonly>
+        </div>
+    </div>
+    
+    <script>
+        let grammagePrice = 0.5; // Prix initial en dinars (pour 80GR)
+        let couleurCount = 1;
+        const impression = 30;
+        const filmSupplement = 15;
+        let isFilmSelected = false;
+    
+       
+        
+        function calculerTotal() {
+            const nombreCarnets = parseInt(document.getElementById('nombre').value) || 0;
+            const supplementParCouleur = 15 * couleurCount;
+            const totalSupplementFilm = isFilmSelected ? filmSupplement : 0;
+            
+            const totalGrammage = nombreCarnets * (grammagePrice / 4);
+            const total = totalGrammage + supplementParCouleur + impression + totalSupplementFilm;
+            
+            document.getElementById('total').value = total.toFixed(2);
+        }
+    
+        function selectGrammage(factor) {
+            switch (factor) {
+                case 1:
+                    grammagePrice = 0.5; // 80GR
+                    break;
+                case 2:
+                    grammagePrice = 1.3; // 180GR
+                    break;
+                case 3:
+                    grammagePrice = 1.5; // 250GR
+                    break;
+                case 4:
+                    grammagePrice = 1.8; // 300GR
+                    break;
+            }
+            
+            document.querySelectorAll('.checkbox-group2 input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
+            document.getElementById(`optionGrammage${factor}`).checked = true;
+            calculerTotal();
+        }
+    
+        function selectCouleur(count) {
+            couleurCount = count;
+            document.querySelectorAll('.checkbox-group1 input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
+            document.getElementById(`optionCouleur${count}`).checked = true;
+            calculerTotal();
+        }
+    
+        function selectfilm() {
+            isFilmSelected = document.getElementById('optionfilm').checked;
+            calculerTotal();
+        }
+    </script>
+    
+    
+</body>
+</html>

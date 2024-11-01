@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="style.css" rel="stylesheet">
+
+    <title>Calcul de Position</title>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Menu</h2>
+        <a href="./application1.html">Carnet NCR,Carte Visites</a>
+        <a href="./application3.html">Impression Numerique</a>
+        <a href="./application2.html">Impression Chemise</a>
+    </div>
+
+    <div class="content">
+        <h1>Devis Numerique</h1>
+        <br>
+
+        <div class="card">
+            <h3>Dimensions du Carnet</h3>
+            <label for="largeur">Largeur</label>
+            <input type="number" id="largeur" placeholder="Tapez la largeur d'article souhaités" oninput="calculerPosition1(); calculerPositionTotal();">
+            
+            <label for="hauteur">Hauteur</label>
+            <input type="number" id="hauteur" placeholder="Tapez la hauteur d'articles souhaités" oninput="calculerPosition(); calculerPositionTotal();">
+        </div>
+    
+        <div class="card">
+   
+            <label for="nombre">Nombre de carnets souhaités</label>
+            <input type="number" id="nombre" placeholder="Tapez le nomBRE d'articles souhaités" oninput="calculerTotal();">
+        </div>
+        <div class="card">
+           
+                
+            
+                        <h3>Grammage Papier</h3>
+            
+                        <div class="checkbox-group2">
+                            <label><input type="checkbox" id="optionGrammage1"  onclick="selectGrammage(1)" > 130GR</label>
+                            <label><input type="checkbox" id="optionGrammage2"  onclick="selectGrammage(2)"> 180GR</label>
+                            <label><input type="checkbox" id="optionGrammage3"  onclick="selectGrammage(3)"> 250GR</label>
+                            <label><input type="checkbox" id="optionGrammage4"  onclick="selectGrammage(4)"> 300GR</label>
+                        </div>
+                        </div>
+
+        <div class="card">
+            <h3>Calcul des Positions</h3>
+            <label for="position">Position par Hauteur</label>
+            <input type="number" id="position" placeholder="Position par hauteur" readonly>
+    
+            <label for="position1">Position par Largeur</label>
+            <input type="number" id="position1" placeholder="Position par largeur" readonly>
+    
+            <label for="position3">Position au Total</label>
+            <input type="number" id="position3" placeholder="Position AU TOTAL" readonly>
+        </div>
+
+        <div class="card total-section">
+            <h3>Total</h3>
+            <input type="number" id="total" placeholder="Total calculé" readonly>
+        </div>
+    </div>
+    
+    <script>
+        let isFilmSelected = false; // Indicateur de l'option Film
+    
+        function calculerPosition() {
+            const hauteur = parseFloat(document.getElementById('hauteur').value);
+            document.getElementById('position').value = hauteur ? Math.floor(48 / hauteur) : 0;
+        }
+    
+        function calculerPosition1() {
+            const largeur = parseFloat(document.getElementById('largeur').value);
+            document.getElementById('position1').value = largeur ? Math.floor(32 / largeur) : 0;
+        }
+    
+        function calculerPositionTotal() {
+            const positionHauteur = parseInt(document.getElementById('position').value) || 0;
+            const positionLargeur = parseInt(document.getElementById('position1').value) || 0;
+            document.getElementById('position3').value = positionHauteur * positionLargeur;
+            calculerTotal();
+        }
+    
+        function calculerTotal() {
+            const nombreCarnets = parseInt(document.getElementById('nombre').value) || 0;
+            const positionTotal = parseInt(document.getElementById('position3').value) || 1;
+            const filmSupplement = 15; // Coût supplémentaire pour l'option Film
+    
+            // Calcul du total : (nombre de carnets * facteur) + supplément Film si sélectionné
+            const total = (nombreCarnets * grammagePrice / positionTotal) + (isFilmSelected ? filmSupplement : 0);
+            document.getElementById('total').value = total.toFixed(2);
+        }
+    
+        function selectfilm() {
+            isFilmSelected = document.getElementById('optionfilm').checked;
+            calculerTotal();
+        }
+        function selectGrammage(factor) {
+            switch (factor) {
+                case 1:
+                    grammagePrice = 0.5; // 130GR
+                    break;
+                case 2:
+                    grammagePrice = 0.7; // 170GR
+                    break;
+                case 3:
+                    grammagePrice = 1.5; // 250GR
+                    break;
+                case 4:
+                    grammagePrice = 2.5; // 300GR
+                    break;
+            }
+            
+            document.querySelectorAll('.checkbox-group2 input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
+            document.getElementById(`optionGrammage${factor}`).checked = true;
+            calculerTotal();
+        }
+    </script>
+    
+</body>
+</html>
